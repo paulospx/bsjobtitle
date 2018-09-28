@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Bullsh*t Job Title Generator">
+    <meta name="author" content="Paulo P.">
+   
+    <title>Bullsh*t Job Title Generator</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center">
+    <form class="form-signin">
+      <img class="mb-4" src="img/manager.png" alt="" width="128" height="128">
+
+      <h2 id="title"></h2>
+      <div style="margin:40px;"></div>
+      <button class="btn btn-lg btn-primary btn-block" onclick="generate_title();return false;">Generate New</button>
+      <p class="mt-5 mb-3 text-muted">&copy; Bullsh*t Job Title 2018</p>
+    </form>
+  </body>
+  <script>
+  var list1 = [
+    "Lead",
+    "Senior",
+    "Direct",
+    "Corporate",
+    "Dynamic",
+    "Future",
+    "Product",
+    "National",
+    "Regional",
+    "District",
+    "Central",
+    "Global",
+    "Relational",
+    "Customer",
+    "Investor",
+    "Dynamic",
+    "International",
+    "Legacy",
+    "Forward",
+    "Interactive",
+    "Internal",
+    "Human",
+    "Chief",
+    "Principal"
+];
+
+var list2 = [
+    "Solutions",
+    "Program",
+    "Brand",
+    "Security",
+    "Research",
+    "Marketing",
+    "Directives",
+    "Implementation",
+    "Integration",
+    "Functionality",
+    "Response",
+    "Paradigm",
+    "Tactics",
+    "Identity",
+    "Markets",
+    "Group",
+    "Resonance",
+    "Applications",
+    "Optimization",
+    "Operations",
+    "Infrastructure",
+    "Intranet",
+    "Communications",
+    "Web",
+    "Branding",
+    "Quality",
+    "Assurance",
+    "Impact",
+    "Mobility",
+    "Ideation",
+    "Data",
+    "Creative",
+    "Configuration",
+    "Accountability",
+    "Interactions",
+    "Factors",
+    "Usability",
+    "Metrics",
+    "Team"
+];
+
+var list3 = [
+    "Supervisor",
+    "Associate",
+    "Executive",
+    "Liason",
+    "Officer",
+    "Manager",
+    "Engineer",
+    "Specialist",
+    "Director",
+    "Coordinator",
+    "Administrator",
+    "Architect",
+    "Analyst",
+    "Designer",
+    "Planner",
+    "Synergist",
+    "Orchestrator",
+    "Technician",
+    "Developer",
+    "Producer",
+    "Consultant",
+    "Assistant",
+    "Facilitator",
+    "Agent",
+    "Representative",
+    "Strategist"
+];
+
+function randomIntFromInterval(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+function generate_title() {
+  var name1 = list1[randomIntFromInterval(0,list1.length-1)];
+  var name2 = list2[randomIntFromInterval(0,list2.length-1)];
+  var name3 = list3[randomIntFromInterval(0,list3.length-1)];
+  var title = name1 +" "+ name2 + " "+ name3;
+  document.getElementById("title").innerText = title;
+  return false;
+}
+  
+generate_title();  
+  </script>
+</html>
