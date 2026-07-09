@@ -2,142 +2,204 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="🐂💩 Bullshit Job Title Generator">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate absurdly corporate job titles in one click. Free, instant, and perfect for satire or fiction.">
     <meta name="author" content="Paulo P.">
-   
-    <title>🐂💩 Bullshit Job Title Generator</title>
-
-    <!-- Bootstrap core CSS -->
+    <title>Bullshit Job Title Generator</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
-
-    <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
   </head>
 
-  <body class="text-center">
-    <form class="form-signin">
-      <img class="mb-4" src="img/manager.png" alt="" width="128" height="128">
+  <body>
+    <main class="app" id="main-content">
+      <header class="app-header">
+        <img
+          class="app-logo"
+          src="img/manager.png"
+          alt=""
+          width="96"
+          height="96"
+          aria-hidden="true"
+        >
+        <h1 class="app-title">Bullshit Job Title Generator</h1>
+        <p class="app-intro">
+          Press <kbd>G</kbd> or click the button below to create an impressively vague corporate title.
+          Press <kbd>C</kbd> to copy your favorite result.
+        </p>
+      </header>
 
-      <h2 id="title"></h2>
-      <div style="margin:40px;"></div>
-      <button class="btn btn-lg btn-primary btn-block" onclick="generate_title();return false;">Generate New</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 🐂💩 Bullshit Job Title 2018</p>
-    </form>
+      <section class="title-panel" aria-labelledby="title-label">
+        <h2 id="title-label" class="visually-hidden">Generated job title</h2>
+        <output
+          id="title"
+          class="generated-title"
+          for="generate-btn"
+          aria-live="polite"
+          aria-atomic="true"
+        ></output>
+      </section>
+
+      <div class="action-group" role="group" aria-label="Title actions">
+        <button
+          type="button"
+          id="generate-btn"
+          class="btn btn-primary btn-lg"
+          aria-keyshortcuts="G"
+        >
+          Generate another title <kbd class="btn-kbd">G</kbd>
+        </button>
+        <button
+          type="button"
+          id="copy-btn"
+          class="btn btn-outline-secondary btn-lg"
+          aria-keyshortcuts="C"
+          disabled
+        >
+          Copy to clipboard <kbd class="btn-kbd">C</kbd>
+        </button>
+      </div>
+
+      <p id="status" class="status-message" role="status" aria-live="polite"></p>
+
+      <footer class="app-footer">
+        <p class="text-muted">
+          &copy; <span id="year"></span> Bullshit Job Title Generator
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      var list1 = [
+        "Lead", "Senior", "Direct", "Corporate", "Dynamic", "Future",
+        "Product", "National", "Regional", "District", "Central", "Global",
+        "Relational", "Customer", "Investor", "International", "Legacy",
+        "Forward", "Interactive", "Internal", "Human", "Chief", "Principal"
+      ];
+
+      var list2 = [
+        "Solutions", "Program", "Brand", "Security", "Research", "Marketing",
+        "Directives", "Implementation", "Integration", "Functionality",
+        "Response", "Paradigm", "Tactics", "Identity", "Markets", "Group",
+        "Resonance", "Applications", "Optimization", "Operations",
+        "Infrastructure", "Intranet", "Communications", "Web", "Branding",
+        "Quality", "Assurance", "Impact", "Mobility", "Ideation", "Data",
+        "Creative", "Configuration", "Accountability", "Interactions",
+        "Factors", "Usability", "Metrics", "Team"
+      ];
+
+      var list3 = [
+        "Supervisor", "Associate", "Executive", "Liaison", "Officer", "Manager",
+        "Engineer", "Specialist", "Director", "Coordinator", "Administrator",
+        "Architect", "Analyst", "Designer", "Planner", "Synergist",
+        "Orchestrator", "Technician", "Developer", "Producer", "Consultant",
+        "Assistant", "Facilitator", "Agent", "Representative", "Strategist"
+      ];
+
+      var titleEl = document.getElementById("title");
+      var generateBtn = document.getElementById("generate-btn");
+      var copyBtn = document.getElementById("copy-btn");
+      var statusEl = document.getElementById("status");
+      var statusTimer;
+
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      function setStatus(message) {
+        statusEl.textContent = message;
+        window.clearTimeout(statusTimer);
+        if (message) {
+          statusTimer = window.setTimeout(function () {
+            statusEl.textContent = "";
+          }, 3000);
+        }
+      }
+
+      function generateTitle() {
+        var name1 = list1[randomIntFromInterval(0, list1.length - 1)];
+        var name2 = list2[randomIntFromInterval(0, list2.length - 1)];
+        var name3 = list3[randomIntFromInterval(0, list3.length - 1)];
+        var newTitle = name1 + " " + name2 + " " + name3;
+
+        titleEl.classList.remove("is-updating");
+        void titleEl.offsetWidth;
+        titleEl.textContent = newTitle;
+        titleEl.classList.add("is-updating");
+        copyBtn.disabled = false;
+        setStatus("New title generated.");
+      }
+
+      function copyTitle() {
+        var text = titleEl.textContent;
+        if (!text) {
+          return;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            setStatus("Copied to clipboard.");
+          }).catch(function () {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      }
+
+      function fallbackCopy(text) {
+        var textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "absolute";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          setStatus("Copied to clipboard.");
+        } catch (err) {
+          setStatus("Copy failed. Select the title and copy manually.");
+        }
+        document.body.removeChild(textarea);
+      }
+
+      function isTypingContext(target) {
+        return target && (
+          target.isContentEditable ||
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT"
+        );
+      }
+
+      function handleKeyboardShortcut(event) {
+        if (event.defaultPrevented || event.repeat) {
+          return;
+        }
+        if (event.ctrlKey || event.metaKey || event.altKey) {
+          return;
+        }
+        if (isTypingContext(event.target)) {
+          return;
+        }
+
+        var key = event.key.toLowerCase();
+
+        if (key === "g") {
+          event.preventDefault();
+          generateTitle();
+        } else if (key === "c" && !copyBtn.disabled) {
+          event.preventDefault();
+          copyTitle();
+        }
+      }
+
+      generateBtn.addEventListener("click", generateTitle);
+      copyBtn.addEventListener("click", copyTitle);
+      document.addEventListener("keydown", handleKeyboardShortcut);
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+      generateTitle();
+    </script>
   </body>
-  <script>
-  var list1 = [
-    "Lead",
-    "Senior",
-    "Direct",
-    "Corporate",
-    "Dynamic",
-    "Future",
-    "Product",
-    "National",
-    "Regional",
-    "District",
-    "Central",
-    "Global",
-    "Relational",
-    "Customer",
-    "Investor",
-    "Dynamic",
-    "International",
-    "Legacy",
-    "Forward",
-    "Interactive",
-    "Internal",
-    "Human",
-    "Chief",
-    "Principal"
-];
-
-var list2 = [
-    "Solutions",
-    "Program",
-    "Brand",
-    "Security",
-    "Research",
-    "Marketing",
-    "Directives",
-    "Implementation",
-    "Integration",
-    "Functionality",
-    "Response",
-    "Paradigm",
-    "Tactics",
-    "Identity",
-    "Markets",
-    "Group",
-    "Resonance",
-    "Applications",
-    "Optimization",
-    "Operations",
-    "Infrastructure",
-    "Intranet",
-    "Communications",
-    "Web",
-    "Branding",
-    "Quality",
-    "Assurance",
-    "Impact",
-    "Mobility",
-    "Ideation",
-    "Data",
-    "Creative",
-    "Configuration",
-    "Accountability",
-    "Interactions",
-    "Factors",
-    "Usability",
-    "Metrics",
-    "Team"
-];
-
-var list3 = [
-    "Supervisor",
-    "Associate",
-    "Executive",
-    "Liason",
-    "Officer",
-    "Manager",
-    "Engineer",
-    "Specialist",
-    "Director",
-    "Coordinator",
-    "Administrator",
-    "Architect",
-    "Analyst",
-    "Designer",
-    "Planner",
-    "Synergist",
-    "Orchestrator",
-    "Technician",
-    "Developer",
-    "Producer",
-    "Consultant",
-    "Assistant",
-    "Facilitator",
-    "Agent",
-    "Representative",
-    "Strategist"
-];
-
-function randomIntFromInterval(min,max)
-{
-    return Math.floor(Math.random()*(max-min+1)+min);
-}
-
-function generate_title() {
-  var name1 = list1[randomIntFromInterval(0,list1.length-1)];
-  var name2 = list2[randomIntFromInterval(0,list2.length-1)];
-  var name3 = list3[randomIntFromInterval(0,list3.length-1)];
-  var title = name1 +" "+ name2 + " "+ name3;
-  document.getElementById("title").innerText = title;
-  return false;
-}
-  
-generate_title();  
-  </script>
 </html>
